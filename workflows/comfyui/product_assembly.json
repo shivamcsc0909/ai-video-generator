@@ -1,0 +1,51 @@
+{
+  "1": {
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {"ckpt_name": "sd_xl_base_1.0.safetensors"}
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "exploded technical assembly view, mechanical components disassembling smoothly in clean studio lighting, high precision engineering visualization"
+    }
+  },
+  "3": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "distorted geometry, chaotic motion, low resolution, motion blur"
+    }
+  },
+  "4": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {"batch_size": 24, "width": 1024, "height": 576}
+  },
+  "5": {
+    "class_type": "KSampler",
+    "inputs": {
+      "cfg": 7.0,
+      "denoise": 1.0,
+      "latent_image": ["4", 0],
+      "model": ["1", 0],
+      "negative": ["3", 0],
+      "positive": ["2", 0],
+      "sampler_name": "euler_ancestral",
+      "scheduler": "normal",
+      "seed": 777,
+      "steps": 25
+    }
+  },
+  "6": {
+    "class_type": "VAEDecode",
+    "inputs": {"samples": ["5", 0], "vae": ["1", 2]}
+  },
+  "7": {
+    "class_type": "AnimateDiffCombine",
+    "inputs": {
+      "images": ["6", 0],
+      "frame_rate": 24,
+      "filename_prefix": "VideoStudio_Assembly"
+    }
+  }
+}
